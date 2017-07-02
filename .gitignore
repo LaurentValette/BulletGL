@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+bullet/*
+*.pro.user
+libs/*
