@@ -15,6 +15,7 @@
 #include "cube.h"
 #include "plane.h"
 #include "cylinder.h"
+#include "shaderloader.h"
 
 #define WIDTH 1280
 #define HEIGHT 768
@@ -62,40 +63,10 @@ int main(int argc, char** argv) {
     dynamicsWorld->addRigidBody(cylinder->getRigidBody());
 
     // Create shader
-    char const * vsrc = "\
-      #version 330 core                                                           \n\
-      layout(location = 0) in vec3 position;                                      \n\
-      layout(location = 1) in vec3 normal;                                        \n\
-      out vec3 light_dir, nor;                                                    \n\
-      uniform mat4 model, view, projection;                                       \n\
-      uniform vec3 light_pos;                                                     \n\
-      void main() {                                                               \n\
-        vec4 vertex_mv = view * model * vec4(position, 1.0);                      \n\
-        gl_Position = projection * vertex_mv;                                     \n\
-        nor = (transpose(inverse(view * model)) * vec4(normal, 0.0)).xyz;         \n\
-        light_dir = (view * vec4(light_pos, 1.0)).xyz - vertex_mv.xyz;            \n\
-      }                                                                           \n\
-    ";
-    char const * fsrc = "\
-      #version 330                                                                \n\
-      in vec3 light_dir, nor;                                                     \n\
-      out vec4 color;                                                             \n\
-      void main() {                                                               \n\
-        float d = max(dot(normalize(nor), normalize(light_dir)), 0.f);            \n\
-        color = vec4(d, d, d, 1.0);                                               \n\
-      }                                                                           \n\
-    ";
     GLuint program = glCreateProgram();
-    GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vs, 1, &vsrc, NULL);
-    glCompileShader(vs);
-    glAttachShader(program, vs);
-    glDeleteShader(vs);
-    GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fs, 1, &fsrc, NULL);
-    glCompileShader(fs);
-    glAttachShader(program, fs);
-    glDeleteShader(fs);
+
+    ShaderLoader::attachShader("shader.vert", GL_VERTEX_SHADER, program);
+    ShaderLoader::attachShader("shader.frag", GL_FRAGMENT_SHADER, program);
     glLinkProgram(program);
 
     // Configure rendering

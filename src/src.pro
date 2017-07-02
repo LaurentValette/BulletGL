@@ -10,6 +10,8 @@ CONFIG -= debug_and_release
 HEADERS += $$files(*.h)
 SOURCES += $$files(*.cpp)
 
+FILES += $$PWD/'shader.vert'
+FILES += $$PWD/'shader.frag'
 DEST = $$OUT_PWD/
 win32:DEST ~= s,/,\\,g
 for (FILE, FILES) {
@@ -34,3 +36,5 @@ INCLUDEPATH += $$PATH_TO_INCLUDE
 LIBS += -L$$PATH_TO_LIB -lopengl32
 LIBS += -L$$PATH_TO_LIB -lglu32
 LIBS += -L$$PATH_TO_LIB -lgdi32
+
+OTHER_FILES += $$files(*.vert) $$files(*.frag)
