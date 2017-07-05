@@ -1,4 +1,6 @@
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 #include <btBulletDynamicsCommon.h>
 
@@ -35,7 +37,7 @@ int main(int argc, char** argv) {
   #if MULTISAMPLING
     glfwWindowHint(GLFW_SAMPLES, MULTISAMPLING);
   #endif
-    GLFWwindow * window = glfwCreateWindow(WIDTH, HEIGHT, "Demo", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Demo", NULL, NULL);
     glfwMakeContextCurrent(window);
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
@@ -87,36 +89,57 @@ int main(int argc, char** argv) {
     glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, false, glm::value_ptr(projection));
     glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, false, glm::value_ptr(view));
 
-    double deltaTime = 1.f / 60.f;
+    double deltaTime = 1.0 / 60.0;
+    int frameCount = 0;
+    double timer = 0.0;
 
     do {
+        // Step bullet simulation
         double startTime = glfwGetTime();
         dynamicsWorld->stepSimulation(deltaTime, 1);
 
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Draw cube
         cube->getWorldTransform(model);
         glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, false, glm::value_ptr(model));
-
-        theta += glm::pi<float>() / 2.f * deltaTime;
-        glm::vec3 light_pos(2.f * glm::cos(theta), 1.5f, 2.f * glm::sin(theta));
-        glUniform3fv(glGetUniformLocation(program, "light_pos"), 1, glm::value_ptr(light_pos));
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glBindVertexArray(cube_vao);
         glDrawElements(GL_TRIANGLES, cube->indices.size() * 3, GL_UNSIGNED_INT, (void*)0);
 
-        glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, false, glm::value_ptr(glm::mat4()));
-        glBindVertexArray(ground_vao);
-        glDrawElements(GL_TRIANGLES, ground->indices.size() * 3, GL_UNSIGNED_INT, (void*)0);
-
+        // Draw cylinder
         cylinder->getWorldTransform(model);
         glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, false, glm::value_ptr(model));
         glBindVertexArray(cylinder_vao);
         glDrawElements(GL_TRIANGLES, cylinder->indices.size() * 3, GL_UNSIGNED_INT, (void*)0);
 
+        // Draw ground
+        glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, false, glm::value_ptr(glm::mat4()));
+        glBindVertexArray(ground_vao);
+        glDrawElements(GL_TRIANGLES, ground->indices.size() * 3, GL_UNSIGNED_INT, (void*)0);
+
+        // Set the light position
+        theta += glm::pi<float>() / 2.f * deltaTime;
+        glm::vec3 light_pos(2.f * glm::cos(theta), 1.5f, 2.f * glm::sin(theta));
+        glUniform3fv(glGetUniformLocation(program, "light_pos"), 1, glm::value_ptr(light_pos));
+
         glfwSwapBuffers(window);
         glfwPollEvents();
 
+        // FPS counter
+        ++frameCount;
+        if (timer >= 1.0) {
+            std::cout << frameCount << std::endl;
+            frameCount = 0;
+            timer = 0.0;
+        }
+
+        // Frame limiter
+        if (!glfwGetWindowAttrib(window, GLFW_FOCUSED)) {
+            std::this_thread::sleep_for(std::chrono::milliseconds((int) (30.0 - deltaTime)));
+        }
+
         deltaTime = glfwGetTime() - startTime;
+        timer += deltaTime;
     } while (!glfwWindowShouldClose(window));
 
     dynamicsWorld->removeRigidBody(ground->getRigidBody());
