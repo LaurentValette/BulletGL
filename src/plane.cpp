@@ -32,7 +32,6 @@ std::vector<glm::vec3> initPlaneVertices()
 {
     std::vector<glm::vec3> v;
 
-    // TODO: Change this to take the rotations into account
     v.push_back(glm::vec3(-10, 0, -10));
     v.push_back(glm::vec3(-10, 0, 10));
     v.push_back(glm::vec3(10, 0, -10));
@@ -71,6 +70,14 @@ const std::vector<glm::uvec3> Cal::Plane::indices = initPlaneIndices();
 btRigidBody* Cal::Plane::getRigidBody()
 {
     return rigidBody;
+}
+
+void Cal::Plane::getWorldTransform(glm::mat4& m)
+{
+    btScalar model[16];
+    rigidBody->getWorldTransform().getOpenGLMatrix(model);
+
+    m = glm::make_mat4(model);
 }
 
 Cal::Plane::~Plane()

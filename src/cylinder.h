@@ -13,8 +13,10 @@
 
 #include <vector>
 
+#include "geometry.h"
+
 namespace Cal {
-class Cylinder
+class Cylinder: public Geometry
 {
 public:
     Cylinder(const float radius = 1.f, const float length = 3.f, const btQuaternion& rotation = btQuaternion(0, 0, 0, 1), const btVector3& translation = btVector3(0, 0, 0));

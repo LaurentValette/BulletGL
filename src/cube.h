@@ -13,8 +13,10 @@
 
 #include <vector>
 
+#include "geometry.h"
+
 namespace Cal {
-class Cube
+class Cube: public Geometry
 {
 public:
     Cube(const float length = 1.f, const btQuaternion& rotation = btQuaternion(0, 0, 0, 1), const btVector3& translation = btVector3(0, 0, 0));
