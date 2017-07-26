@@ -19,9 +19,10 @@ namespace Cal {
 class Cube: public Geometry
 {
 public:
-    Cube(const float length = 1.f, const btQuaternion& rotation = btQuaternion(0, 0, 0, 1), const btVector3& translation = btVector3(0, 0, 0));
+    Cube(btDiscreteDynamicsWorld* dynamicsWorld, const float length = 1.f, const btQuaternion& rotation = btQuaternion(0, 0, 0, 1), const btVector3& translation = btVector3(0, 0, 0));
     btRigidBody* getRigidBody();
     void getWorldTransform(glm::mat4& m);
+    void render(GLuint program);
     ~Cube();
 
     static const std::vector<glm::vec3> vertices;
@@ -29,6 +30,7 @@ public:
     static const std::vector<glm::uvec3> indices;
 
 private:
+    btDiscreteDynamicsWorld* m_dynamicsWorld;
     float scale;
     btCollisionShape* collisionShape;
     btDefaultMotionState* motionState;
@@ -36,6 +38,7 @@ private:
     GLuint vertex_buffer;
     GLuint normal_buffer;
     GLuint index_buffer;
+    GLuint vertex_array_object;
 };
 }
 

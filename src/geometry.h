@@ -1,6 +1,9 @@
 #ifndef CAL_GEOMETRY_H
 #define CAL_GEOMETRY_H
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
@@ -13,6 +16,7 @@ public:
     Geometry();
     virtual btRigidBody* getRigidBody() = 0;
     virtual void getWorldTransform(glm::mat4& m) = 0;
+    virtual void render(GLuint program) = 0;
     virtual ~Geometry();
 };
 }

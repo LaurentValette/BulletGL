@@ -1,6 +1,7 @@
 #include "cube.h"
 
-Cal::Cube::Cube(const float length, const btQuaternion& rotation, const btVector3& translation): scale(length)
+Cal::Cube::Cube(btDiscreteDynamicsWorld* dynamicsWorld, const float length, const btQuaternion& rotation, const btVector3& translation):
+    m_dynamicsWorld(dynamicsWorld), scale(length)
 {
     collisionShape = new btBoxShape(btVector3(length / 2.f, length / 2.f, length / 2.f));
     motionState = new btDefaultMotionState(btTransform(rotation, translation));
@@ -8,6 +9,11 @@ Cal::Cube::Cube(const float length, const btQuaternion& rotation, const btVector
     btVector3 inertia(0, 0, 0);
     collisionShape->calculateLocalInertia(mass, inertia);
     rigidBody = new btRigidBody(mass, motionState, collisionShape, inertia);
+    dynamicsWorld->addRigidBody(rigidBody);
+
+    // Create vertex array object
+    glGenVertexArrays(1, &vertex_array_object);
+    glBindVertexArray(vertex_array_object);
 
     // Create vertex buffer
     glGenBuffers(1, &vertex_buffer);
@@ -142,8 +148,18 @@ void Cal::Cube::getWorldTransform(glm::mat4& m)
     m = glm::scale(glm::make_mat4(model), glm::vec3(scale));
 }
 
+void Cal::Cube::render(GLuint program)
+{
+    glm::mat4 model;
+    getWorldTransform(model);
+    glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, false, glm::value_ptr(model));
+    glBindVertexArray(vertex_array_object);
+    glDrawElements(GL_TRIANGLES, indices.size() * 3, GL_UNSIGNED_INT, (void*)0);
+}
+
 Cal::Cube::~Cube()
 {
+    m_dynamicsWorld->removeRigidBody(rigidBody);
     delete rigidBody;
     delete motionState;
     delete collisionShape;
@@ -151,4 +167,5 @@ Cal::Cube::~Cube()
     glDeleteBuffers(1, &vertex_buffer);
     glDeleteBuffers(1, &normal_buffer);
     glDeleteBuffers(1, &index_buffer);
+    glDeleteVertexArrays(1, &vertex_array_object);
 }

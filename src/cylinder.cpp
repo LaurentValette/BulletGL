@@ -3,7 +3,8 @@
 #define CYLINDER_PERIMETER 20
 #define CYLINDER_HEIGHT 2
 
-Cal::Cylinder::Cylinder(const float radius, const float length, const btQuaternion& rotation, const btVector3& translation): m_radius(radius), m_length(length)
+Cal::Cylinder::Cylinder(btDiscreteDynamicsWorld* dynamicsWorld, const float radius, const float length, const btQuaternion& rotation, const btVector3& translation):
+    m_dynamicsWorld(dynamicsWorld), m_radius(radius), m_length(length)
 {
     collisionShape = new btCylinderShape(btVector3(radius, length / 2.f, radius));
     motionState = new btDefaultMotionState(btTransform(rotation, translation));
@@ -11,6 +12,11 @@ Cal::Cylinder::Cylinder(const float radius, const float length, const btQuaterni
     btVector3 inertia(0, 0, 0);
     collisionShape->calculateLocalInertia(mass, inertia);
     rigidBody = new btRigidBody(mass, motionState, collisionShape, inertia);
+    m_dynamicsWorld->addRigidBody(rigidBody);
+
+    // Create vertex array object
+    glGenVertexArrays(1, &vertex_array_object);
+    glBindVertexArray(vertex_array_object);
 
     // Create vertex buffer
     glGenBuffers(1, &vertex_buffer);
@@ -142,8 +148,18 @@ void Cal::Cylinder::getWorldTransform(glm::mat4& m)
     m = glm::scale(glm::make_mat4(model), glm::vec3(m_radius, m_length, m_radius));
 }
 
+void Cal::Cylinder::render(GLuint program)
+{
+    glm::mat4 model;
+    getWorldTransform(model);
+    glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, false, glm::value_ptr(model));
+    glBindVertexArray(vertex_array_object);
+    glDrawElements(GL_TRIANGLES, indices.size() * 3, GL_UNSIGNED_INT, (void*)0);
+}
+
 Cal::Cylinder::~Cylinder()
 {
+    m_dynamicsWorld->removeRigidBody(rigidBody);
     delete rigidBody;
     delete motionState;
     delete collisionShape;
@@ -151,4 +167,5 @@ Cal::Cylinder::~Cylinder()
     glDeleteBuffers(1, &vertex_buffer);
     glDeleteBuffers(1, &normal_buffer);
     glDeleteBuffers(1, &index_buffer);
+    glDeleteVertexArrays(1, &vertex_array_object);
 }

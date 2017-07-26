@@ -1,12 +1,18 @@
 #include "plane.h"
 
-Cal::Plane::Plane(const btVector3& normal, const float distance)
+Cal::Plane::Plane(btDiscreteDynamicsWorld* dynamicsWorld, const btVector3& normal, const float distance):
+    m_dynamicsWorld(dynamicsWorld)
 {
     collisionShape = new btStaticPlaneShape(normal, distance);
     motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
     btScalar mass = 0;
     btVector3 inertia(0, 0, 0);
     rigidBody = new btRigidBody(mass, motionState, collisionShape, inertia);
+    dynamicsWorld->addRigidBody(rigidBody);
+
+    // Create vertex array object
+    glGenVertexArrays(1, &vertex_array_object);
+    glBindVertexArray(vertex_array_object);
 
     // Create vertex buffer
     glGenBuffers(1, &vertex_buffer);
@@ -80,8 +86,18 @@ void Cal::Plane::getWorldTransform(glm::mat4& m)
     m = glm::make_mat4(model);
 }
 
+void Cal::Plane::render(GLuint program)
+{
+    glm::mat4 model;
+    getWorldTransform(model);
+    glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, false, glm::value_ptr(model));
+    glBindVertexArray(vertex_array_object);
+    glDrawElements(GL_TRIANGLES, indices.size() * 3, GL_UNSIGNED_INT, (void*)0);
+}
+
 Cal::Plane::~Plane()
 {
+    m_dynamicsWorld->removeRigidBody(rigidBody);
     delete rigidBody;
     delete motionState;
     delete collisionShape;
@@ -89,4 +105,5 @@ Cal::Plane::~Plane()
     glDeleteBuffers(1, &vertex_buffer);
     glDeleteBuffers(1, &normal_buffer);
     glDeleteBuffers(1, &index_buffer);
+    glDeleteVertexArrays(1, &vertex_array_object);
 }
