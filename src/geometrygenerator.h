@@ -19,6 +19,7 @@ class GeometryGenerator
 public:
     GeometryGenerator(btDiscreteDynamicsWorld* dynamicsWorld, const int itemCount = 10);
     void renderAll(const double deltaTime, GLuint program);
+    ~GeometryGenerator();
 
 private:
     float randomFloat();

@@ -51,3 +51,8 @@ void Cal::GeometryGenerator::addRandomGeometry(int i)
         geometryItems.at(i) = std::unique_ptr<Cal::Geometry>(new Cal::Cylinder(m_dynamicsWorld, cylinderRadius, cylinderLength, btQuaternion(0, 0, 0, 1), btVector3(0, 10, 0)));
     }
 }
+
+Cal::GeometryGenerator::~GeometryGenerator()
+{
+    geometryItems.clear();
+}

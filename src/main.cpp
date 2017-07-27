@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 
     dynamicsWorld->setGravity(btVector3(0, -10, 0));
 
-    Cal::GeometryGenerator geometryGenerator(dynamicsWorld, 100);
+    Cal::GeometryGenerator* geometryGenerator = new Cal::GeometryGenerator(dynamicsWorld, 100);
 
     // Create shader
     GLuint program = glCreateProgram();
@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
         glm::vec3 light_pos(2.f * glm::cos(theta), 1.5f, 2.f * glm::sin(theta));
         glUniform3fv(glGetUniformLocation(program, "light_pos"), 1, glm::value_ptr(light_pos));
 
-        geometryGenerator.renderAll(deltaTime, program);
+        geometryGenerator->renderAll(deltaTime, program);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -114,6 +114,8 @@ int main(int argc, char** argv) {
         deltaTime = glfwGetTime() - startTime;
         timer += deltaTime;
     } while (!glfwWindowShouldClose(window));
+
+    delete geometryGenerator;
 
     glDeleteProgram(program);
     glfwDestroyWindow(window);
