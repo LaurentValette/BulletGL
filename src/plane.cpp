@@ -1,6 +1,7 @@
 #include "plane.h"
 
-Cal::Plane::Plane(btDiscreteDynamicsWorld* dynamicsWorld, const btVector3& normal, const float distance)
+Cal::Plane::Plane(btDiscreteDynamicsWorld* dynamicsWorld, const btVector3& normal, const float distance):
+    Geometry(vertices, normals, indices)
 {
     m_dynamicsWorld = dynamicsWorld;
 
@@ -10,29 +11,6 @@ Cal::Plane::Plane(btDiscreteDynamicsWorld* dynamicsWorld, const btVector3& norma
     btVector3 inertia(0, 0, 0);
     rigidBody = new btRigidBody(mass, motionState, collisionShape, inertia);
     dynamicsWorld->addRigidBody(rigidBody);
-
-    // Create vertex array object
-    glGenVertexArrays(1, &vertex_array_object);
-    glBindVertexArray(vertex_array_object);
-
-    // Create vertex buffer
-    glGenBuffers(1, &vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat) * 3, vertices.data(), GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, (void *)0);
-
-    // Create normal buffer
-    glGenBuffers(1, &normal_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, normal_buffer);
-    glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(GLfloat) * 3, normals.data(), GL_STATIC_DRAW);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, (void *)0);
-
-    // Create index buffer
-    glGenBuffers(1, &index_buffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint) * 3, indices.data(), GL_STATIC_DRAW);
 }
 
 std::vector<glm::vec3> initPlaneVertices()

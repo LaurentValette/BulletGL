@@ -17,7 +17,7 @@ namespace Cal {
 class Geometry
 {
 public:
-    Geometry();
+    Geometry(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::uvec3> indices);
     virtual glm::mat4 getWorldTransform() = 0;
     virtual void render(GLuint program);
     virtual std::vector<glm::vec3> getVertices() = 0;
