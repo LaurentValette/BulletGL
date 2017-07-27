@@ -4,8 +4,10 @@
 #define CYLINDER_HEIGHT 2
 
 Cal::Cylinder::Cylinder(btDiscreteDynamicsWorld* dynamicsWorld, const float radius, const float length, const btQuaternion& rotation, const btVector3& translation):
-    m_dynamicsWorld(dynamicsWorld), m_radius(radius), m_length(length)
+    m_radius(radius), m_length(length)
 {
+    m_dynamicsWorld = dynamicsWorld;
+
     collisionShape = new btCylinderShape(btVector3(radius, length / 2.f, radius));
     motionState = new btDefaultMotionState(btTransform(rotation, translation));
     btScalar mass = 1;
@@ -135,37 +137,29 @@ std::vector<glm::uvec3> initCylinderIndices()
 
 const std::vector<glm::uvec3> Cal::Cylinder::indices = initCylinderIndices();
 
-btRigidBody* Cal::Cylinder::getRigidBody()
+std::vector<glm::vec3> Cal::Cylinder::getVertices()
 {
-    return rigidBody;
+    return vertices;
 }
 
-void Cal::Cylinder::getWorldTransform(glm::mat4& m)
+std::vector<glm::vec3> Cal::Cylinder::getNormals()
+{
+    return normals;
+}
+
+std::vector<glm::uvec3> Cal::Cylinder::getIndices()
+{
+    return indices;
+}
+
+glm::mat4 Cal::Cylinder::getWorldTransform()
 {
     btScalar model[16];
     rigidBody->getWorldTransform().getOpenGLMatrix(model);
 
-    m = glm::scale(glm::make_mat4(model), glm::vec3(m_radius, m_length, m_radius));
-}
-
-void Cal::Cylinder::render(GLuint program)
-{
-    glm::mat4 model;
-    getWorldTransform(model);
-    glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, false, glm::value_ptr(model));
-    glBindVertexArray(vertex_array_object);
-    glDrawElements(GL_TRIANGLES, indices.size() * 3, GL_UNSIGNED_INT, (void*)0);
+    return glm::scale(glm::make_mat4(model), glm::vec3(m_radius, m_length, m_radius));
 }
 
 Cal::Cylinder::~Cylinder()
 {
-    m_dynamicsWorld->removeRigidBody(rigidBody);
-    delete rigidBody;
-    delete motionState;
-    delete collisionShape;
-
-    glDeleteBuffers(1, &vertex_buffer);
-    glDeleteBuffers(1, &normal_buffer);
-    glDeleteBuffers(1, &index_buffer);
-    glDeleteVertexArrays(1, &vertex_array_object);
 }

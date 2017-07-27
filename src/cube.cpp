@@ -1,8 +1,10 @@
 #include "cube.h"
 
 Cal::Cube::Cube(btDiscreteDynamicsWorld* dynamicsWorld, const float length, const btQuaternion& rotation, const btVector3& translation):
-    m_dynamicsWorld(dynamicsWorld), scale(length)
+    scale(length)
 {
+    m_dynamicsWorld = dynamicsWorld;
+
     collisionShape = new btBoxShape(btVector3(length / 2.f, length / 2.f, length / 2.f));
     motionState = new btDefaultMotionState(btTransform(rotation, translation));
     btScalar mass = 1;
@@ -134,38 +136,29 @@ std::vector<glm::uvec3> initCubeIndices()
 
 const std::vector<glm::uvec3> Cal::Cube::indices = initCubeIndices();
 
-btRigidBody* Cal::Cube::getRigidBody()
+std::vector<glm::vec3> Cal::Cube::getVertices()
 {
-    return rigidBody;
+    return vertices;
 }
 
+std::vector<glm::vec3> Cal::Cube::getNormals()
+{
+    return normals;
+}
 
-void Cal::Cube::getWorldTransform(glm::mat4& m)
+std::vector<glm::uvec3> Cal::Cube::getIndices()
+{
+    return indices;
+}
+
+glm::mat4 Cal::Cube::getWorldTransform()
 {
     btScalar model[16];
     rigidBody->getWorldTransform().getOpenGLMatrix(model);
 
-    m = glm::scale(glm::make_mat4(model), glm::vec3(scale));
-}
-
-void Cal::Cube::render(GLuint program)
-{
-    glm::mat4 model;
-    getWorldTransform(model);
-    glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, false, glm::value_ptr(model));
-    glBindVertexArray(vertex_array_object);
-    glDrawElements(GL_TRIANGLES, indices.size() * 3, GL_UNSIGNED_INT, (void*)0);
+    return glm::scale(glm::make_mat4(model), glm::vec3(scale));
 }
 
 Cal::Cube::~Cube()
 {
-    m_dynamicsWorld->removeRigidBody(rigidBody);
-    delete rigidBody;
-    delete motionState;
-    delete collisionShape;
-
-    glDeleteBuffers(1, &vertex_buffer);
-    glDeleteBuffers(1, &normal_buffer);
-    glDeleteBuffers(1, &index_buffer);
-    glDeleteVertexArrays(1, &vertex_array_object);
 }

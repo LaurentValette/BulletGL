@@ -1,8 +1,9 @@
 #include "plane.h"
 
-Cal::Plane::Plane(btDiscreteDynamicsWorld* dynamicsWorld, const btVector3& normal, const float distance):
-    m_dynamicsWorld(dynamicsWorld)
+Cal::Plane::Plane(btDiscreteDynamicsWorld* dynamicsWorld, const btVector3& normal, const float distance)
 {
+    m_dynamicsWorld = dynamicsWorld;
+
     collisionShape = new btStaticPlaneShape(normal, distance);
     motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
     btScalar mass = 0;
@@ -73,37 +74,29 @@ std::vector<glm::uvec3> initPlaneIndices()
 
 const std::vector<glm::uvec3> Cal::Plane::indices = initPlaneIndices();
 
-btRigidBody* Cal::Plane::getRigidBody()
+std::vector<glm::vec3> Cal::Plane::getVertices()
 {
-    return rigidBody;
+    return vertices;
 }
 
-void Cal::Plane::getWorldTransform(glm::mat4& m)
+std::vector<glm::vec3> Cal::Plane::getNormals()
+{
+    return normals;
+}
+
+std::vector<glm::uvec3> Cal::Plane::getIndices()
+{
+    return indices;
+}
+
+glm::mat4 Cal::Plane::getWorldTransform()
 {
     btScalar model[16];
     rigidBody->getWorldTransform().getOpenGLMatrix(model);
 
-    m = glm::make_mat4(model);
-}
-
-void Cal::Plane::render(GLuint program)
-{
-    glm::mat4 model;
-    getWorldTransform(model);
-    glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, false, glm::value_ptr(model));
-    glBindVertexArray(vertex_array_object);
-    glDrawElements(GL_TRIANGLES, indices.size() * 3, GL_UNSIGNED_INT, (void*)0);
+    return glm::make_mat4(model);
 }
 
 Cal::Plane::~Plane()
 {
-    m_dynamicsWorld->removeRigidBody(rigidBody);
-    delete rigidBody;
-    delete motionState;
-    delete collisionShape;
-
-    glDeleteBuffers(1, &vertex_buffer);
-    glDeleteBuffers(1, &normal_buffer);
-    glDeleteBuffers(1, &index_buffer);
-    glDeleteVertexArrays(1, &vertex_array_object);
 }

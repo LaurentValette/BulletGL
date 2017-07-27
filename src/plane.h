@@ -20,24 +20,15 @@ class Plane: public Geometry
 {
 public:
     Plane(btDiscreteDynamicsWorld* dynamicsWorld, const btVector3& normal = btVector3(0, 1, 0), const float distance = 0.f);
-    btRigidBody* getRigidBody();
-    void getWorldTransform(glm::mat4& m);
-    void render(GLuint program);
+    glm::mat4 getWorldTransform();
+    std::vector<glm::vec3> getVertices();
+    std::vector<glm::vec3> getNormals();
+    std::vector<glm::uvec3> getIndices();
     ~Plane();
 
     static const std::vector<glm::vec3> vertices;
     static const std::vector<glm::vec3> normals;
     static const std::vector<glm::uvec3> indices;
-
-private:
-    btDiscreteDynamicsWorld* m_dynamicsWorld;
-    btCollisionShape* collisionShape;
-    btDefaultMotionState* motionState;
-    btRigidBody* rigidBody;
-    GLuint vertex_buffer;
-    GLuint normal_buffer;
-    GLuint index_buffer;
-    GLuint vertex_array_object;
 };
 }
 

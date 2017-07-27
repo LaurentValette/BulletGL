@@ -20,9 +20,10 @@ class Cube: public Geometry
 {
 public:
     Cube(btDiscreteDynamicsWorld* dynamicsWorld, const float length = 1.f, const btQuaternion& rotation = btQuaternion(0, 0, 0, 1), const btVector3& translation = btVector3(0, 0, 0));
-    btRigidBody* getRigidBody();
-    void getWorldTransform(glm::mat4& m);
-    void render(GLuint program);
+    glm::mat4 getWorldTransform();
+    std::vector<glm::vec3> getVertices();
+    std::vector<glm::vec3> getNormals();
+    std::vector<glm::uvec3> getIndices();
     ~Cube();
 
     static const std::vector<glm::vec3> vertices;
@@ -30,15 +31,7 @@ public:
     static const std::vector<glm::uvec3> indices;
 
 private:
-    btDiscreteDynamicsWorld* m_dynamicsWorld;
     float scale;
-    btCollisionShape* collisionShape;
-    btDefaultMotionState* motionState;
-    btRigidBody* rigidBody;
-    GLuint vertex_buffer;
-    GLuint normal_buffer;
-    GLuint index_buffer;
-    GLuint vertex_array_object;
 };
 }
 
