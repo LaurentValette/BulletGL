@@ -4,6 +4,10 @@ Cal::GeometryGenerator::GeometryGenerator(btDiscreteDynamicsWorld* dynamicsWorld
     m_dynamicsWorld(dynamicsWorld), geometryItems(itemCount + 1), itemRotatingCounter(0), timestamp(0.0), timer(0.0),
     rng((std::random_device())()), distribution(0.f, 1.f)
 {
+    ObjLoader::parseObjFile("cube.obj", cube_vertices, cube_normals);
+    ObjLoader::parseObjFile("cylinder.obj", cylinder_vertices, cylinder_normals);
+    ObjLoader::parseObjFile("sphere.obj", sphere_vertices, sphere_normals);
+
     for (int i = 0; i < itemCount; ++i)
     {
         addRandomGeometry(i);
@@ -41,7 +45,7 @@ void Cal::GeometryGenerator::addRandomGeometry(int i)
     {
         // [0.5; 1.0[
         float cubeLength = distribution(rng) * 0.5f + 0.5f;
-        geometryItems.at(i) = std::unique_ptr<Cal::Geometry>(new Cal::Cube(m_dynamicsWorld, cubeLength, btQuaternion(0, 0, 0, 1), btVector3(0, 10, 0)));
+        geometryItems.at(i) = std::unique_ptr<Cal::Geometry>(new Cal::Cube(cube_vertices, cube_normals, m_dynamicsWorld, cubeLength, btQuaternion(0, 0, 0, 1), btVector3(0, 10, 0)));
     }
     else if (rand < 0.66f)
     {
@@ -49,13 +53,13 @@ void Cal::GeometryGenerator::addRandomGeometry(int i)
         float cylinderRadius = distribution(rng) * 0.5f + 0.25f;
         // [0.75; 1.25[
         float cylinderLength = distribution(rng) * 0.5f + 0.75f;
-        geometryItems.at(i) = std::unique_ptr<Cal::Geometry>(new Cal::Cylinder(m_dynamicsWorld, cylinderRadius, cylinderLength, btQuaternion(0, 0, 0, 1), btVector3(0, 10, 0)));
+        geometryItems.at(i) = std::unique_ptr<Cal::Geometry>(new Cal::Cylinder(cylinder_vertices, cylinder_normals, m_dynamicsWorld, cylinderRadius, cylinderLength, btQuaternion(0, 0, 0, 1), btVector3(0, 10, 0)));
     }
     else
     {
         // [0.5; 0.75[
         float sphereRadius = distribution(rng) * 0.5f + 0.25f;
-        geometryItems.at(i) = std::unique_ptr<Cal::Geometry>(new Cal::Sphere(m_dynamicsWorld, sphereRadius, btVector3(0, 10, 0)));
+        geometryItems.at(i) = std::unique_ptr<Cal::Geometry>(new Cal::Sphere(sphere_vertices, sphere_normals, m_dynamicsWorld, sphereRadius, btVector3(0, 10, 0)));
     }
 }
 

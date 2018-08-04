@@ -8,11 +8,16 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+
 #include "geometry.h"
 #include "cube.h"
 #include "cylinder.h"
 #include "plane.h"
 #include "sphere.h"
+
+#include "objloader.h"
 
 namespace Cal {
 class GeometryGenerator
@@ -35,6 +40,13 @@ private:
 
     std::mt19937 rng;
     std::uniform_real_distribution<float> distribution;
+
+    std::vector<glm::vec3> cube_vertices;
+    std::vector<glm::vec3> cube_normals;
+    std::vector<glm::vec3> cylinder_vertices;
+    std::vector<glm::vec3> cylinder_normals;
+    std::vector<glm::vec3> sphere_vertices;
+    std::vector<glm::vec3> sphere_normals;
 };
 }
 

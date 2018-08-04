@@ -1,7 +1,8 @@
 #include "cube.h"
 
-Cal::Cube::Cube(btDiscreteDynamicsWorld* dynamicsWorld, const float length, const btQuaternion& rotation, const btVector3& translation):
-    Geometry(vertices, normals, indices), m_length(length)
+Cal::Cube::Cube(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals,
+                btDiscreteDynamicsWorld* dynamicsWorld, const float length, const btQuaternion& rotation, const btVector3& translation):
+    Geometry(vertices, normals), m_length(length), m_vertices(vertices), m_normals(normals)
 {
     m_dynamicsWorld = dynamicsWorld;
 
@@ -14,118 +15,14 @@ Cal::Cube::Cube(btDiscreteDynamicsWorld* dynamicsWorld, const float length, cons
     dynamicsWorld->addRigidBody(rigidBody);
 }
 
-std::vector<glm::vec3> Cal::Cube::initCubeVertices()
-{
-    std::vector<glm::vec3> v;
-
-    v.push_back(glm::vec3(-0.5, -0.5, 0.5));
-    v.push_back(glm::vec3(0.5, -0.5, 0.5));
-    v.push_back(glm::vec3(-0.5, 0.5, 0.5));
-    v.push_back(glm::vec3(0.5, 0.5, 0.5));
-
-    v.push_back(glm::vec3(0.5, -0.5, 0.5));
-    v.push_back(glm::vec3(0.5, -0.5, -0.5));
-    v.push_back(glm::vec3(0.5, 0.5, 0.5));
-    v.push_back(glm::vec3(0.5, 0.5, -0.5));
-
-    v.push_back(glm::vec3(0.5, -0.5, -0.5));
-    v.push_back(glm::vec3(-0.5, -0.5, -0.5));
-    v.push_back(glm::vec3(0.5, 0.5, -0.5));
-    v.push_back(glm::vec3(-0.5, 0.5, -0.5));
-
-    v.push_back(glm::vec3(-0.5, -0.5, -0.5));
-    v.push_back(glm::vec3(-0.5, -0.5, 0.5));
-    v.push_back(glm::vec3(-0.5, 0.5, -0.5));
-    v.push_back(glm::vec3(-0.5, 0.5, 0.5));
-
-    v.push_back(glm::vec3(-0.5, -0.5, -0.5));
-    v.push_back(glm::vec3(0.5, -0.5, -0.5));
-    v.push_back(glm::vec3(-0.5, -0.5, 0.5));
-    v.push_back(glm::vec3(0.5, -0.5, 0.5));
-
-    v.push_back(glm::vec3(-0.5, 0.5, 0.5));
-    v.push_back(glm::vec3(0.5, 0.5, 0.5));
-    v.push_back(glm::vec3(-0.5, 0.5, -0.5));
-    v.push_back(glm::vec3(0.5, 0.5, -0.5));
-
-    return v;
-}
-
-const std::vector<glm::vec3> Cal::Cube::vertices = initCubeVertices();
-
-std::vector<glm::vec3> Cal::Cube::initCubeNormals()
-{
-    std::vector<glm::vec3> n;
-
-    for (int i = 0; i < 4; ++i) {
-        n.push_back(glm::vec3(0, 0, 1));
-    }
-
-    for (int i = 0; i < 4; ++i) {
-        n.push_back(glm::vec3(1, 0, 0));
-    }
-
-    for (int i = 0; i < 4; ++i) {
-        n.push_back(glm::vec3(0, 0, -1));
-    }
-
-    for (int i = 0; i < 4; ++i) {
-        n.push_back(glm::vec3(-1, 0, 0));
-    }
-
-    for (int i = 0; i < 4; ++i) {
-        n.push_back(glm::vec3(0, -1, 0));
-    }
-
-    for (int i = 0; i < 4; ++i) {
-        n.push_back(glm::vec3(0, 1, 0));
-    }
-
-    return n;
-}
-
-const std::vector<glm::vec3> Cal::Cube::normals = initCubeNormals();
-
-std::vector<glm::uvec3> Cal::Cube::initCubeIndices()
-{
-    std::vector<glm::uvec3> i;
-
-    i.push_back(glm::uvec3(0, 2, 1));
-    i.push_back(glm::uvec3(1, 2, 3));
-
-    i.push_back(glm::uvec3(4, 7, 5));
-    i.push_back(glm::uvec3(4, 6, 7));
-
-    i.push_back(glm::uvec3(8, 11, 9));
-    i.push_back(glm::uvec3(8, 10, 11));
-
-    i.push_back(glm::uvec3(12, 14, 13));
-    i.push_back(glm::uvec3(13, 14, 15));
-
-    i.push_back(glm::uvec3(16, 18, 17));
-    i.push_back(glm::uvec3(17, 18, 19));
-
-    i.push_back(glm::uvec3(20, 23, 21));
-    i.push_back(glm::uvec3(20, 22, 23));
-
-    return i;
-}
-
-const std::vector<glm::uvec3> Cal::Cube::indices = initCubeIndices();
-
 std::vector<glm::vec3> Cal::Cube::getVertices()
 {
-    return vertices;
+    return m_vertices;
 }
 
 std::vector<glm::vec3> Cal::Cube::getNormals()
 {
-    return normals;
-}
-
-std::vector<glm::uvec3> Cal::Cube::getIndices()
-{
-    return indices;
+    return m_normals;
 }
 
 glm::mat4 Cal::Cube::getWorldTransform()

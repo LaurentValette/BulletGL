@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
   #endif
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-    glFrontFace(GL_CW);
+    glFrontFace(GL_CCW);
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glUseProgram(program);
     // Create the perspective projection matrix and the model view matrix

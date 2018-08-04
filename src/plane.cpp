@@ -1,7 +1,7 @@
 #include "plane.h"
 
 Cal::Plane::Plane(btDiscreteDynamicsWorld* dynamicsWorld, const btVector3& normal, const float distance):
-    Geometry(vertices, normals, indices)
+    Geometry(vertices, normals)
 {
     m_dynamicsWorld = dynamicsWorld;
 
@@ -20,7 +20,10 @@ std::vector<glm::vec3> Cal::Plane::initPlaneVertices()
     v.push_back(glm::vec3(-10, 0, -10));
     v.push_back(glm::vec3(-10, 0, 10));
     v.push_back(glm::vec3(10, 0, -10));
+
+    v.push_back(glm::vec3(-10, 0, 10));
     v.push_back(glm::vec3(10, 0, 10));
+    v.push_back(glm::vec3(10, 0, -10));
 
     return v;
 }
@@ -31,7 +34,7 @@ std::vector<glm::vec3> Cal::Plane::initPlaneNormals()
 {
     std::vector<glm::vec3> n;
 
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < vertices.size(); ++i) {
         n.push_back(glm::vec3(0, 1, 0));
     }
 
@@ -39,18 +42,6 @@ std::vector<glm::vec3> Cal::Plane::initPlaneNormals()
 }
 
 const std::vector<glm::vec3> Cal::Plane::normals = initPlaneNormals();
-
-std::vector<glm::uvec3> Cal::Plane::initPlaneIndices()
-{
-    std::vector<glm::uvec3> i;
-
-    i.push_back(glm::uvec3(0, 2, 1));
-    i.push_back(glm::uvec3(1, 2, 3));
-
-    return i;
-}
-
-const std::vector<glm::uvec3> Cal::Plane::indices = initPlaneIndices();
 
 std::vector<glm::vec3> Cal::Plane::getVertices()
 {
@@ -60,11 +51,6 @@ std::vector<glm::vec3> Cal::Plane::getVertices()
 std::vector<glm::vec3> Cal::Plane::getNormals()
 {
     return normals;
-}
-
-std::vector<glm::uvec3> Cal::Plane::getIndices()
-{
-    return indices;
 }
 
 glm::mat4 Cal::Plane::getWorldTransform()

@@ -23,16 +23,13 @@ public:
     glm::mat4 getWorldTransform();
     std::vector<glm::vec3> getVertices();
     std::vector<glm::vec3> getNormals();
-    std::vector<glm::uvec3> getIndices();
     ~Plane();
 
     static std::vector<glm::vec3> initPlaneVertices();
     static std::vector<glm::vec3> initPlaneNormals();
-    static std::vector<glm::uvec3> initPlaneIndices();
 
     static const std::vector<glm::vec3> vertices;
     static const std::vector<glm::vec3> normals;
-    static const std::vector<glm::uvec3> indices;
 };
 }
 

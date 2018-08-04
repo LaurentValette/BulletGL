@@ -19,23 +19,18 @@ namespace Cal {
 class Cylinder: public Geometry
 {
 public:
-    Cylinder(btDiscreteDynamicsWorld* dynamicsWorld, const float radius = 1.f, const float length = 3.f, const btQuaternion& rotation = btQuaternion(0, 0, 0, 1), const btVector3& translation = btVector3(0, 0, 0));
+    Cylinder(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals,
+             btDiscreteDynamicsWorld* dynamicsWorld, const float radius = 1.f, const float length = 3.f, const btQuaternion& rotation = btQuaternion(0, 0, 0, 1), const btVector3& translation = btVector3(0, 0, 0));
     glm::mat4 getWorldTransform();
     std::vector<glm::vec3> getVertices();
     std::vector<glm::vec3> getNormals();
-    std::vector<glm::uvec3> getIndices();
     ~Cylinder();
-
-    static std::vector<glm::vec3> initCylinderVertices();
-    static std::vector<glm::vec3> initCylinderNormals();
-    static std::vector<glm::uvec3> initCylinderIndices();
-
-    static const std::vector<glm::vec3> vertices;
-    static const std::vector<glm::vec3> normals;
-    static const std::vector<glm::uvec3> indices;
 
 private:
     float m_radius, m_length;
+
+    std::vector<glm::vec3> m_vertices;
+    std::vector<glm::vec3> m_normals;
 };
 }
 

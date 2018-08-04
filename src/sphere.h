@@ -19,23 +19,18 @@ namespace Cal {
 class Sphere: public Geometry
 {
 public:
-    Sphere(btDiscreteDynamicsWorld* dynamicsWorld, const float radius = 1.f, const btVector3& translation = btVector3(0, 0, 0));
+    Sphere(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals,
+           btDiscreteDynamicsWorld* dynamicsWorld, const float radius = 1.f, const btVector3& translation = btVector3(0, 0, 0));
     glm::mat4 getWorldTransform();
     std::vector<glm::vec3> getVertices();
     std::vector<glm::vec3> getNormals();
-    std::vector<glm::uvec3> getIndices();
     ~Sphere();
-
-    static std::vector<glm::vec3> initSphereVertices();
-    static std::vector<glm::vec3> initSphereNormals();
-    static std::vector<glm::uvec3> initSphereIndices();
-
-    static const std::vector<glm::vec3> vertices;
-    static const std::vector<glm::vec3> normals;
-    static const std::vector<glm::uvec3> indices;
 
 private:
     float m_radius;
+
+    std::vector<glm::vec3> m_vertices;
+    std::vector<glm::vec3> m_normals;
 };
 }
 #endif // CAL_SPHERE_H

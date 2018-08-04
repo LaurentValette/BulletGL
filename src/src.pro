@@ -12,6 +12,9 @@ SOURCES += $$files(*.cpp)
 
 FILES += $$PWD/'shader.vert'
 FILES += $$PWD/'shader.frag'
+FILES += $$PWD/'../obj/cube.obj'
+FILES += $$PWD/'../obj/cylinder.obj'
+FILES += $$PWD/'../obj/sphere.obj'
 DEST = $$OUT_PWD/
 win32:DEST ~= s,/,\\,g
 for (FILE, FILES) {
