@@ -13,7 +13,7 @@ Cal::Plane::Plane(btDiscreteDynamicsWorld* dynamicsWorld, const btVector3& norma
     dynamicsWorld->addRigidBody(rigidBody);
 }
 
-std::vector<glm::vec3> initPlaneVertices()
+std::vector<glm::vec3> Cal::Plane::initPlaneVertices()
 {
     std::vector<glm::vec3> v;
 
@@ -27,7 +27,7 @@ std::vector<glm::vec3> initPlaneVertices()
 
 const std::vector<glm::vec3> Cal::Plane::vertices = initPlaneVertices();
 
-std::vector<glm::vec3> initPlaneNormals()
+std::vector<glm::vec3> Cal::Plane::initPlaneNormals()
 {
     std::vector<glm::vec3> n;
 
@@ -40,7 +40,7 @@ std::vector<glm::vec3> initPlaneNormals()
 
 const std::vector<glm::vec3> Cal::Plane::normals = initPlaneNormals();
 
-std::vector<glm::uvec3> initPlaneIndices()
+std::vector<glm::uvec3> Cal::Plane::initPlaneIndices()
 {
     std::vector<glm::uvec3> i;
 

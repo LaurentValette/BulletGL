@@ -17,7 +17,7 @@ Cal::Cylinder::Cylinder(btDiscreteDynamicsWorld* dynamicsWorld, const float radi
     m_dynamicsWorld->addRigidBody(rigidBody);
 }
 
-std::vector<glm::vec3> initCylinderVertices()
+std::vector<glm::vec3> Cal::Cylinder::initCylinderVertices()
 {
     std::vector<glm::vec3> v;
 
@@ -53,7 +53,7 @@ std::vector<glm::vec3> initCylinderVertices()
 
 const std::vector<glm::vec3> Cal::Cylinder::vertices = initCylinderVertices();
 
-std::vector<glm::vec3> initCylinderNormals()
+std::vector<glm::vec3> Cal::Cylinder::initCylinderNormals()
 {
     std::vector<glm::vec3> n;
 
@@ -81,7 +81,7 @@ std::vector<glm::vec3> initCylinderNormals()
 
 const std::vector<glm::vec3> Cal::Cylinder::normals = initCylinderNormals();
 
-std::vector<glm::uvec3> initCylinderIndices()
+std::vector<glm::uvec3> Cal::Cylinder::initCylinderIndices()
 {
     std::vector<glm::uvec3> indices;
 

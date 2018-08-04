@@ -12,6 +12,7 @@
 #include "cube.h"
 #include "cylinder.h"
 #include "plane.h"
+#include "sphere.h"
 
 namespace Cal {
 class GeometryGenerator

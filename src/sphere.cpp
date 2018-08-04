@@ -1,12 +1,12 @@
-#include "cube.h"
+#include "sphere.h"
 
-Cal::Cube::Cube(btDiscreteDynamicsWorld* dynamicsWorld, const float length, const btQuaternion& rotation, const btVector3& translation):
-    Geometry(vertices, normals, indices), m_length(length)
+Cal::Sphere::Sphere(btDiscreteDynamicsWorld* dynamicsWorld, const float radius, const btVector3& translation):
+    Geometry(vertices, normals, indices), m_radius(radius)
 {
     m_dynamicsWorld = dynamicsWorld;
 
-    collisionShape = new btBoxShape(btVector3(length / 2.f, length / 2.f, length / 2.f));
-    motionState = new btDefaultMotionState(btTransform(rotation, translation));
+    collisionShape = new btSphereShape(radius);
+    motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), translation));
     btScalar mass = 1;
     btVector3 inertia(0, 0, 0);
     collisionShape->calculateLocalInertia(mass, inertia);
@@ -14,7 +14,7 @@ Cal::Cube::Cube(btDiscreteDynamicsWorld* dynamicsWorld, const float length, cons
     dynamicsWorld->addRigidBody(rigidBody);
 }
 
-std::vector<glm::vec3> Cal::Cube::initCubeVertices()
+std::vector<glm::vec3> Cal::Sphere::initSphereVertices()
 {
     std::vector<glm::vec3> v;
 
@@ -51,9 +51,9 @@ std::vector<glm::vec3> Cal::Cube::initCubeVertices()
     return v;
 }
 
-const std::vector<glm::vec3> Cal::Cube::vertices = initCubeVertices();
+const std::vector<glm::vec3> Cal::Sphere::vertices = Cal::Sphere::initSphereVertices();
 
-std::vector<glm::vec3> Cal::Cube::initCubeNormals()
+std::vector<glm::vec3> Cal::Sphere::initSphereNormals()
 {
     std::vector<glm::vec3> n;
 
@@ -84,9 +84,9 @@ std::vector<glm::vec3> Cal::Cube::initCubeNormals()
     return n;
 }
 
-const std::vector<glm::vec3> Cal::Cube::normals = initCubeNormals();
+const std::vector<glm::vec3> Cal::Sphere::normals = initSphereNormals();
 
-std::vector<glm::uvec3> Cal::Cube::initCubeIndices()
+std::vector<glm::uvec3> Cal::Sphere::initSphereIndices()
 {
     std::vector<glm::uvec3> i;
 
@@ -111,31 +111,31 @@ std::vector<glm::uvec3> Cal::Cube::initCubeIndices()
     return i;
 }
 
-const std::vector<glm::uvec3> Cal::Cube::indices = initCubeIndices();
+const std::vector<glm::uvec3> Cal::Sphere::indices = initSphereIndices();
 
-std::vector<glm::vec3> Cal::Cube::getVertices()
+std::vector<glm::vec3> Cal::Sphere::getVertices()
 {
     return vertices;
 }
 
-std::vector<glm::vec3> Cal::Cube::getNormals()
+std::vector<glm::vec3> Cal::Sphere::getNormals()
 {
     return normals;
 }
 
-std::vector<glm::uvec3> Cal::Cube::getIndices()
+std::vector<glm::uvec3> Cal::Sphere::getIndices()
 {
     return indices;
 }
 
-glm::mat4 Cal::Cube::getWorldTransform()
+glm::mat4 Cal::Sphere::getWorldTransform()
 {
     btScalar model[16];
     rigidBody->getWorldTransform().getOpenGLMatrix(model);
 
-    return glm::scale(glm::make_mat4(model), glm::vec3(m_length));
+    return glm::scale(glm::make_mat4(model), glm::vec3(m_radius * 2.f));
 }
 
-Cal::Cube::~Cube()
+Cal::Sphere::~Sphere()
 {
 }

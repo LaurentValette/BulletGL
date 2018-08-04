@@ -36,19 +36,26 @@ float Cal::GeometryGenerator::randomFloat()
 
 void Cal::GeometryGenerator::addRandomGeometry(int i)
 {
-    if (distribution(rng) < 0.5f)
+    float rand = distribution(rng);
+    if (rand < 0.33f)
     {
         // [0.5; 1.0[
         float cubeLength = distribution(rng) * 0.5f + 0.5f;
         geometryItems.at(i) = std::unique_ptr<Cal::Geometry>(new Cal::Cube(m_dynamicsWorld, cubeLength, btQuaternion(0, 0, 0, 1), btVector3(0, 10, 0)));
     }
-    else
+    else if (rand < 0.66f)
     {
         // [0.25; 0.75[
         float cylinderRadius = distribution(rng) * 0.5f + 0.25f;
         // [0.75; 1.25[
         float cylinderLength = distribution(rng) * 0.5f + 0.75f;
         geometryItems.at(i) = std::unique_ptr<Cal::Geometry>(new Cal::Cylinder(m_dynamicsWorld, cylinderRadius, cylinderLength, btQuaternion(0, 0, 0, 1), btVector3(0, 10, 0)));
+    }
+    else
+    {
+        // [0.5; 0.75[
+        float sphereRadius = distribution(rng) * 0.5f + 0.25f;
+        geometryItems.at(i) = std::unique_ptr<Cal::Geometry>(new Cal::Sphere(m_dynamicsWorld, sphereRadius, btVector3(0, 10, 0)));
     }
 }
 

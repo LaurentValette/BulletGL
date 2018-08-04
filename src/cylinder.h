@@ -26,6 +26,10 @@ public:
     std::vector<glm::uvec3> getIndices();
     ~Cylinder();
 
+    static std::vector<glm::vec3> initCylinderVertices();
+    static std::vector<glm::vec3> initCylinderNormals();
+    static std::vector<glm::uvec3> initCylinderIndices();
+
     static const std::vector<glm::vec3> vertices;
     static const std::vector<glm::vec3> normals;
     static const std::vector<glm::uvec3> indices;
