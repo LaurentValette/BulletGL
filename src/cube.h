@@ -19,18 +19,13 @@ namespace Cal {
 class Cube: public Geometry
 {
 public:
-    Cube(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals,
+    Cube(const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals,
          btDiscreteDynamicsWorld* dynamicsWorld, const float length = 1.f, const btQuaternion& rotation = btQuaternion(0, 0, 0, 1), const btVector3& translation = btVector3(0, 0, 0));
     glm::mat4 getWorldTransform();
-    std::vector<glm::vec3> getVertices();
-    std::vector<glm::vec3> getNormals();
     ~Cube();
 
 private:
     float m_length;
-
-    std::vector<glm::vec3> m_vertices;
-    std::vector<glm::vec3> m_normals;
 };
 }
 

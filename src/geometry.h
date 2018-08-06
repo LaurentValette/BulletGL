@@ -17,11 +17,9 @@ namespace Cal {
 class Geometry
 {
 public:
-    Geometry(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals);
+    Geometry(const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals);
     virtual glm::mat4 getWorldTransform() = 0;
     virtual void render(GLuint program);
-    virtual std::vector<glm::vec3> getVertices() = 0;
-    virtual std::vector<glm::vec3> getNormals() = 0;
     virtual ~Geometry();
 
 protected:
@@ -32,6 +30,9 @@ protected:
     GLuint vertex_buffer;
     GLuint normal_buffer;
     GLuint vertex_array_object;
+
+    std::vector<glm::vec3> m_vertices;
+    std::vector<glm::vec3> m_normals;
 };
 }
 

@@ -1,7 +1,10 @@
 #include "geometry.h"
 
-Cal::Geometry::Geometry(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals)
+Cal::Geometry::Geometry(const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals)
 {
+    m_vertices = vertices;
+    m_normals = normals;
+
     // Create vertex array object
     glGenVertexArrays(1, &vertex_array_object);
     glBindVertexArray(vertex_array_object);
@@ -26,7 +29,7 @@ void Cal::Geometry::render(GLuint program)
     glm::mat4 model = getWorldTransform();
     glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, false, glm::value_ptr(model));
     glBindVertexArray(vertex_array_object);
-    glDrawArrays(GL_TRIANGLES, 0, getVertices().size());
+    glDrawArrays(GL_TRIANGLES, 0, m_vertices.size());
 }
 
 Cal::Geometry::~Geometry()

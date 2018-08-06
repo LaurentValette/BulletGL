@@ -43,16 +43,6 @@ std::vector<glm::vec3> Cal::Plane::initPlaneNormals()
 
 const std::vector<glm::vec3> Cal::Plane::normals = initPlaneNormals();
 
-std::vector<glm::vec3> Cal::Plane::getVertices()
-{
-    return vertices;
-}
-
-std::vector<glm::vec3> Cal::Plane::getNormals()
-{
-    return normals;
-}
-
 glm::mat4 Cal::Plane::getWorldTransform()
 {
     btScalar model[16];

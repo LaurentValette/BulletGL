@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <random>
-#include <memory>
 
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -32,7 +31,7 @@ private:
     void addRandomGeometry(int index);
 
     btDiscreteDynamicsWorld* m_dynamicsWorld;
-    std::vector<std::unique_ptr<Cal::Geometry>> geometryItems;
+    std::vector<Cal::Geometry*> geometryItems;
     int itemRotatingCounter;
 
     double timestamp;

@@ -21,8 +21,6 @@ class Plane: public Geometry
 public:
     Plane(btDiscreteDynamicsWorld* dynamicsWorld, const btVector3& normal = btVector3(0, 1, 0), const float distance = 0.f);
     glm::mat4 getWorldTransform();
-    std::vector<glm::vec3> getVertices();
-    std::vector<glm::vec3> getNormals();
     ~Plane();
 
     static std::vector<glm::vec3> initPlaneVertices();
